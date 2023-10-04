@@ -6,8 +6,8 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NetworkSetup.unity
-    guid: 695d844fd62fd407888ead7c2b5a6815
+    path: Assets/Scenes/FaceARScene.unity
+    guid: 6bdce89659816455b9f906fc62d19910
   m_configObjects:
     AR Foundation RemoteARFoundationRemoteLoaderSettings: {fileID: 11400000, guid: 6cdf776be606743ac9324bc0541cb251,
       type: 2}

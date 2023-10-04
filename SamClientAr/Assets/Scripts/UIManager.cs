@@ -12,23 +12,37 @@ namespace Riptide.Demos.DedicatedClient
 
         public void ConnectClicked()
         {
-            tempServerAddress = serverAddressInput.text;
+            tempServerAddress = serverAddressInput.text.Trim();
+            //if (!ValidAddressEntry(tempServerAddress))
+            //{
+            //    return;
+            //}
             connectScreen.SetActive(false);
             NetworkManager.Instance.Connect(tempServerAddress);
         }
+
+        //private bool ValidAddressEntry(string checkAddress)
+        //{
+        //    if (checkAddress.Length == 0)
+        //    {
+        //        Debug.Log("IP address length is 0. Invalid entry");
+        //        return false;
+        //    }
+
+        //    IPAddress ip;
+        //    bool ValidateIP = IPAddress.TryParse(checkAddress, out ip);
+        //    if (ValidateIP)
+        //    {
+        //        Debug.Log("Valid IP entered");
+        //        return true;
+        //    }
+
+        //    return false;
+        //}
 
         public void BackToMain()
         {
             connectScreen.SetActive(true);
         }
-
-        #region Messages
-        public void SendName()
-        {
-            Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.PlayerName);
-            message.AddString("ClientArFace");
-            NetworkManager.Instance.Client.Send(message);
-        }
-        #endregion
     }
 }

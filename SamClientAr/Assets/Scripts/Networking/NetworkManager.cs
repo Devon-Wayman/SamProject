@@ -4,27 +4,14 @@ using UnityEngine;
 
 namespace Riptide.Demos.DedicatedClient
 {
-    public enum ServerToClientId : ushort
-    {
-        SpawnPlayer = 1,
-        PlayerMovement,
-    }
     public enum ClientToServerId : ushort
     {
-        PlayerName = 1,
         PlayerInput,
     }
 
     public class NetworkManager : DevSingleton<NetworkManager>
     {
-
         [SerializeField] private ushort port;
-
-        [SerializeField] private GameObject localPlayerPrefab;
-        [SerializeField] private GameObject playerPrefab;
-
-        public GameObject LocalPlayerPrefab => localPlayerPrefab;
-        public GameObject PlayerPrefab => playerPrefab;
 
         public Client Client { get; private set; }
 
@@ -35,8 +22,6 @@ namespace Riptide.Demos.DedicatedClient
             Client = new Client();
             Client.Connected += DidConnect;
             Client.ConnectionFailed += FailedToConnect;
-            Client.ClientDisconnected += PlayerLeft;
-            Client.Disconnected += DidDisconnect;
         }
 
         private void FixedUpdate()
@@ -47,47 +32,44 @@ namespace Riptide.Demos.DedicatedClient
         private void OnApplicationQuit()
         {
             Client.Disconnect();
-
             Client.Connected -= DidConnect;
             Client.ConnectionFailed -= FailedToConnect;
-            Client.ClientDisconnected -= PlayerLeft;
-            Client.Disconnected -= DidDisconnect;
         }
 
         public void Connect(string serverIp)
         {
-#if UNITY_EDITOR
             Debug.Log($"Attempting to connect to server at {serverIp}:{port}");
-#endif
             Client.Connect($"{serverIp}:{port}");
         }
 
         private void DidConnect(object sender, EventArgs e)
         {
-            UIManager.Instance.SendName();
+            Debug.Log("Local client has connected to server");
+
+            // TODO: Set a bool value for the ArHeadPlayerController to reference rather than
+            // checking if the client is connected or not directly from the client
+            //UIManager.Instance.SendName();
         }
 
         private void FailedToConnect(object sender, ConnectionFailedEventArgs e)
         {
+            Debug.Log("Local client failed to connect to server");
             UIManager.Instance.BackToMain();
         }
 
-        private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
-        {
-            //Destroy(Player.list[e.Id].gameObject);
-            Destroy(ArHeadPlayer.list[e.Id].gameObject);
-        }
+        //private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
+        //{
+        //    Destroy(ArHeadPlayer.list[e.Id].gameObject);
+        //}
 
-        private void DidDisconnect(object sender, DisconnectedEventArgs e)
-        {
-            UIManager.Instance.BackToMain();
+        //private void DidDisconnect(object sender, DisconnectedEventArgs e)
+        //{
+        //    UIManager.Instance.BackToMain();
 
-            //foreach (Player player in Player.list.Values)
-            //    Destroy(player.gameObject);
-            foreach (ArHeadPlayer player in ArHeadPlayer.list.Values)
-            {
-                Destroy(player.gameObject);
-            }
-        }
+        //    foreach (ArHeadPlayer player in ArHeadPlayer.list.Values)
+        //    {
+        //        Destroy(player.gameObject);
+        //    }
+        //}
     }
 }

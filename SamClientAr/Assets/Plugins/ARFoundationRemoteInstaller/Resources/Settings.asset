@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd607c3f010ab45a29ecfcf8d5a898ef, type: 3}
   m_Name: Settings
   m_EditorClassIdentifier: 
-  ARCompanionAppIP: 172.20.10.13
+  ARCompanionAppIP: 172.20.10.4
   arCompanionSettings:
     cameraVideoSettings:
       enableVideo: 0
@@ -27,7 +27,7 @@ MonoBehaviour:
     faceTrackingSettings:
       maxFPS: 30
       sendVertices: 0
-      sendNormals: 1
+      sendNormals: 0
       sendARKitBlendshapes: 1
     CPUImagePlaneMode: 0
     maxLatency: 0.5

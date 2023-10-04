@@ -23,7 +23,8 @@ namespace UnityEngine.XR.ARFoundation.Samples
     [RequireComponent(typeof(ARFace))]
     public class ARKitBlendShapeVisualizerFixed : MonoBehaviour
     {
-        [SerializeField] float m_CoefficientScale = 100.0f;
+        [SerializeField]
+        float m_CoefficientScale = 100.0f;
 
         public float coefficientScale
         {
@@ -31,7 +32,8 @@ namespace UnityEngine.XR.ARFoundation.Samples
             set { m_CoefficientScale = value; }
         }
 
-        [SerializeField] SkinnedMeshRenderer m_SkinnedMeshRenderer;
+        [SerializeField]
+        SkinnedMeshRenderer m_SkinnedMeshRenderer;
 
         public SkinnedMeshRenderer skinnedMeshRenderer
         {
@@ -52,11 +54,11 @@ namespace UnityEngine.XR.ARFoundation.Samples
         Dictionary<ARKitBlendShapeLocation, int> m_FaceArkitBlendShapeIndexMap;
         #endif
 
-        [SerializeField] ARFace m_Face;
+        ARFace m_Face;
 
         void Awake()
         {
-            //m_Face = GetComponent<ARFace>();
+            m_Face = GetComponent<ARFace>();
             CreateFeatureBlendMapping();
         }
 
@@ -135,7 +137,11 @@ namespace UnityEngine.XR.ARFoundation.Samples
 
         void UpdateVisibility()
         {
-            var visible = enabled && (m_Face.trackingState == TrackingState.Tracking) && (ARSession.state > ARSessionState.Ready);
+            var visible =
+                enabled &&
+                (m_Face.trackingState == TrackingState.Tracking) &&
+                (ARSession.state > ARSessionState.Ready);
+
             SetVisible(visible);
         }
 
@@ -143,7 +149,6 @@ namespace UnityEngine.XR.ARFoundation.Samples
         {
     #if (UNITY_IOS || UNITY_EDITOR) && (ARKIT_FACE_TRACKING_INSTALLED || ARKIT_5_0_0_OR_NEWER)
             var faceManager = FindObjectOfType<ARFaceManager>();
-
             if (faceManager != null)
             {
                 m_ARKitFaceSubsystem = (ARKitFaceSubsystem)faceManager.subsystem;
