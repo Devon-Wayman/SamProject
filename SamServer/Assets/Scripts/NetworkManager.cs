@@ -17,24 +17,8 @@ namespace Riptide.Demos.DedicatedServer
         FaceUpdate,
     }
 
-    public class NetworkManager : MonoBehaviour
+    public class NetworkManager : DevSingleton<NetworkManager>
     {
-        private static NetworkManager _singleton;
-        public static NetworkManager Singleton
-        {
-            get => _singleton;
-            private set
-            {
-                if (_singleton == null)
-                    _singleton = value;
-                else if (_singleton != value)
-                {
-                    Debug.Log($"{nameof(NetworkManager)} instance already exists, destroying object!");
-                    Destroy(value);
-                }
-            }
-        }
-
         [SerializeField] private ushort port;
         [SerializeField] private ushort maxClientCount;
         [SerializeField] private GameObject playerPrefab;
@@ -43,15 +27,10 @@ namespace Riptide.Demos.DedicatedServer
 
         public Server Server { get; private set; }
 
-        private void Awake()
-        {
-            Singleton = this;
-        }
-
         private void Start()
         {
             QualitySettings.vSyncCount = 0;
-            Application.targetFrameRate = 30;
+            Application.targetFrameRate = 60;
 
 #if UNITY_EDITOR
             RiptideLogger.Initialize(Debug.Log, Debug.Log, Debug.LogWarning, Debug.LogError, false);
@@ -82,6 +61,7 @@ namespace Riptide.Demos.DedicatedServer
             Server.ClientDisconnected -= PlayerLeft;
         }
 
+        // TODO: See if we are able to remove this function
         private void NewPlayerConnected(object sender, ServerConnectedEventArgs e)
         {
             foreach (Player player in Player.List.Values)
@@ -89,7 +69,6 @@ namespace Riptide.Demos.DedicatedServer
                 if (player.Id != e.Client.Id)
                 {
                     player.SendSpawn(e.Client.Id);
-
                 }
             }
         }

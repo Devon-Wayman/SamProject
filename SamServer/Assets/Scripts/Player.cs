@@ -24,8 +24,18 @@ namespace Riptide.Demos.DedicatedServer
             LatestBlendValues = new float[TotalBlendShapes];
         }
 
+        private void Update()
+        {
+            if (NetworkManager.Instance.Server.ClientCount == 0) return;
+
+            this.gameObject.transform.position = latestPosition;
+            this.gameObject.transform.localEulerAngles = latestRotation;
+        }
         private void FixedUpdate()
         {
+            if (NetworkManager.Instance.Server.ClientCount == 0) return;
+
+
             if (serverHeadMesh == null)
                 return;
 
@@ -44,7 +54,7 @@ namespace Riptide.Demos.DedicatedServer
 
         public static void Spawn(ushort id, string username)
         {
-            Player player = Instantiate(NetworkManager.Singleton.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
+            Player player = Instantiate(NetworkManager.Instance.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
             player.name = $"Player {id} ({(username == "" ? "Guest" : username)})";
             player.Id = id;
             player.Username = username;
@@ -58,12 +68,12 @@ namespace Riptide.Demos.DedicatedServer
         /// <param name="toClient">The client to send the message to.</param>
         public void SendSpawn(ushort toClient)
         {
-            NetworkManager.Singleton.Server.Send(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)), toClient);
+            NetworkManager.Instance.Server.Send(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)), toClient);
         }
         /// <summary>Sends a player's info to all clients.</summary>
         private void SendSpawn()
         {
-            NetworkManager.Singleton.Server.SendToAll(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)));
+            NetworkManager.Instance.Server.SendToAll(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)));
         }
 
         private Message GetSpawnData(Message message)
