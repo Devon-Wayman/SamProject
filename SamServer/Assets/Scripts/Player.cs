@@ -1,56 +1,101 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace Riptide.Demos.DedicatedServer
 {
-    public class Player : DevSingleton<Player>
+    public class Player : MonoBehaviour
     {
-        [SerializeField] SkinnedMeshRenderer skinnedMeshRenderer = null;
+        public static Dictionary<ushort, Player> List { get; private set; } = new Dictionary<ushort, Player>();
 
-        static float[] receivedBlendWeights { get; set; }
+        public ushort Id { get; private set; }
+        public string Username { get; private set; }
 
 
+        [SerializeField] SkinnedMeshRenderer serverHeadMesh;
         static int TotalBlendShapes = 0;
-        static Vector3 receivedPosition = Vector3.zero;
-        static Vector3 receivedEulerAngle = Vector3.zero;
-
+        static float[] LatestBlendValues { get; set; }
 
         private void Start()
         {
-            if (skinnedMeshRenderer == null) return;
+            if (serverHeadMesh == null)
+                return;
 
-            TotalBlendShapes = skinnedMeshRenderer.sharedMesh.blendShapeCount;
-            receivedBlendWeights = new float[TotalBlendShapes];
-        }
-
-        private void Update()
-        {
-            if (skinnedMeshRenderer == null) return;
-
-            for (int i = 0; i < TotalBlendShapes; i++)
-            {
-                skinnedMeshRenderer.SetBlendShapeWeight(i, receivedBlendWeights[i]);
-            }
+            TotalBlendShapes = serverHeadMesh.sharedMesh.blendShapeCount;
+            LatestBlendValues = new float[TotalBlendShapes];
         }
 
         private void FixedUpdate()
         {
-            gameObject.transform.position = receivedPosition;
-            gameObject.transform.eulerAngles = receivedEulerAngle;
+            if (serverHeadMesh == null)
+                return;
+
+            // Set the local head's blend values to the latest received from the connected client
+            for (int i = 0; i < TotalBlendShapes; i++)
+            {
+                serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
+            }
         }
 
 
-        /// <summary>
-        /// Reads the incoming transform and blendshape data from the connected client
-        /// </summary>
-        /// <param name="message"></param>
-        [MessageHandler((ushort)ClientToServerId.PlayerInput)]
-        private static void PlayerInput(Message message)
+        private void OnDestroy()
         {
-            receivedPosition = message.GetVector3();
-            receivedEulerAngle = message.GetVector3();
-            message.GetFloats(TotalBlendShapes, receivedBlendWeights);
-
-            Debug.Log($"Recent position: {receivedPosition}   Recent rotation: {receivedEulerAngle}");
+            List.Remove(Id);
         }
+
+        public static void Spawn(ushort id, string username)
+        {
+            Player player = Instantiate(NetworkManager.Singleton.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
+            player.name = $"Player {id} ({(username == "" ? "Guest" : username)})";
+            player.Id = id;
+            player.Username = username;
+
+            player.SendSpawn();
+            List.Add(player.Id, player);
+        }
+
+        #region Messages
+        /// <summary>Sends a player's info to the given client.</summary>
+        /// <param name="toClient">The client to send the message to.</param>
+        public void SendSpawn(ushort toClient)
+        {
+            NetworkManager.Singleton.Server.Send(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)), toClient);
+        }
+        /// <summary>Sends a player's info to all clients.</summary>
+        private void SendSpawn()
+        {
+            NetworkManager.Singleton.Server.SendToAll(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)));
+        }
+
+        private Message GetSpawnData(Message message)
+        {
+            message.AddUShort(Id);
+            message.AddString(Username);
+            message.AddVector3(transform.position);
+            return message;
+        }
+
+
+        [MessageHandler((ushort)ClientToServerId.PlayerName)]
+        private static void PlayerName(ushort fromClientId, Message message)
+        {
+            Spawn(fromClientId, message.GetString());
+        }
+
+
+        // Handles incoming message from client containing latest head transforms and blend values
+        static Vector3 latestPosition = Vector3.zero;
+        static Vector3 latestRotation = Vector3.zero;
+        [MessageHandler((ushort)ClientToServerId.FaceUpdate)]
+        private static void PlayerInput(ushort fromClientId, Message message)
+        {
+            Player player = List[fromClientId];
+            latestPosition = message.GetVector3();
+            latestRotation = message.GetVector3();
+
+            Debug.Log($"Position: {latestPosition}  Rotation: {latestRotation}");
+
+            LatestBlendValues = message.GetFloats(TotalBlendShapes);
+        }
+        #endregion
     }
 }

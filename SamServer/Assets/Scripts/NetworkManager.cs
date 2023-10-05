@@ -1,6 +1,4 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using Riptide.Utils;
+﻿using Riptide.Utils;
 #if !UNITY_EDITOR
 using System;
 #endif
@@ -8,31 +6,50 @@ using UnityEngine;
 
 namespace Riptide.Demos.DedicatedServer
 {
-    //public enum ServerToClientId : ushort
-    //{
-    //    SpawnPlayer = 1,
-    //    PlayerMovement,
-    //}
+    public enum ServerToClientId : ushort
+    {
+        SpawnPlayer = 1,
+        PlayerMovement,
+    }
     public enum ClientToServerId : ushort
     {
-        PlayerInput,
+        PlayerName = 1,
+        FaceUpdate,
     }
 
-    public class NetworkManager : DevSingleton<NetworkManager>
+    public class NetworkManager : MonoBehaviour
     {
-        string serversIp = string.Empty;
-
+        private static NetworkManager _singleton;
+        public static NetworkManager Singleton
+        {
+            get => _singleton;
+            private set
+            {
+                if (_singleton == null)
+                    _singleton = value;
+                else if (_singleton != value)
+                {
+                    Debug.Log($"{nameof(NetworkManager)} instance already exists, destroying object!");
+                    Destroy(value);
+                }
+            }
+        }
 
         [SerializeField] private ushort port;
         [SerializeField] private ushort maxClientCount;
+        [SerializeField] private GameObject playerPrefab;
+
+        public GameObject PlayerPrefab => playerPrefab;
 
         public Server Server { get; private set; }
 
+        private void Awake()
+        {
+            Singleton = this;
+        }
 
         private void Start()
         {
-            SetServersIp();
-
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 30;
 
@@ -46,23 +63,10 @@ namespace Riptide.Demos.DedicatedServer
 #endif
 
             Server = new Server();
-            Server.ClientConnected += ClientConnected;
-            Server.ClientDisconnected += ClientDisconnected;
+            Server.ClientConnected += NewPlayerConnected;
+            Server.ClientDisconnected += PlayerLeft;
 
             Server.Start(port, maxClientCount);
-        }
-
-        private void SetServersIp()
-        {
-                var host = Dns.GetHostEntry(Dns.GetHostName());
-                foreach (var ip in host.AddressList)
-                {
-                    if (ip.AddressFamily == AddressFamily.InterNetwork)
-                    {
-                        Debug.Log(ip.ToString());
-                        serversIp = ip.ToString();
-                    }
-                }
         }
 
         private void FixedUpdate()
@@ -73,39 +77,26 @@ namespace Riptide.Demos.DedicatedServer
         private void OnApplicationQuit()
         {
             Server.Stop();
-            Server.ClientConnected -= ClientConnected;
-            Server.ClientDisconnected -= ClientDisconnected;
+
+            Server.ClientConnected -= NewPlayerConnected;
+            Server.ClientDisconnected -= PlayerLeft;
         }
 
-
-        /// <summary>
-        /// Executed when the single client connects to the  server. Enables the head mesh renderer
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ClientConnected(object sender, ServerConnectedEventArgs e)
+        private void NewPlayerConnected(object sender, ServerConnectedEventArgs e)
         {
-            Debug.Log("CLIENT HAS CONNECTED");
-            Player.Instance.gameObject.SetActive(true);
+            foreach (Player player in Player.List.Values)
+            {
+                if (player.Id != e.Client.Id)
+                {
+                    player.SendSpawn(e.Client.Id);
+
+                }
+            }
         }
 
-        /// <summary>
-        /// Executed when the single client disconnects. For now just disabling the head mesh but can incorporate an outro to play 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void ClientDisconnected(object sender, ServerDisconnectedEventArgs e)
+        private void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
         {
-            Debug.Log("CLIENT HAS DISCONNECTED");
-            Player.Instance.gameObject.SetActive(false);
-        }
-
-
-        // print the servers available ip addresses when no one is connected
-        private void OnGUI()
-        {
-            if (!(Server.ClientCount == 0)) return;
-            GUI.Label(new Rect(10, 10, 200, 20), $"Server address: {serversIp}!");
+            Destroy(Player.List[e.Client.Id].gameObject);
         }
     }
 }
