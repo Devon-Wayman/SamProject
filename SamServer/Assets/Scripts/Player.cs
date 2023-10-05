@@ -12,22 +12,29 @@ namespace Riptide.Demos.DedicatedServer
 
 
         [SerializeField] SkinnedMeshRenderer serverHeadMesh;
-        static int TotalBlendShapes = 0;
+        public static int TotalBlendShapes { get; private set; } = 0;
         static float[] LatestBlendValues { get; set; }
 
         private void Start()
         {
-            if (serverHeadMesh == null)
-                return;
+            if (serverHeadMesh == null) return;
 
             TotalBlendShapes = serverHeadMesh.sharedMesh.blendShapeCount;
             LatestBlendValues = new float[TotalBlendShapes];
         }
 
+        private void Update()
+        {
+            if (NetworkManager.Instance.Server.ClientCount == 0) return;
+
+            this.gameObject.transform.position = latestPosition;
+            this.gameObject.transform.localEulerAngles = latestRotation;
+        }
         private void FixedUpdate()
         {
-            if (serverHeadMesh == null)
-                return;
+            if (NetworkManager.Instance.Server.ClientCount == 0) return;
+
+            if (serverHeadMesh == null)return;
 
             // Set the local head's blend values to the latest received from the connected client
             for (int i = 0; i < TotalBlendShapes; i++)
@@ -36,7 +43,6 @@ namespace Riptide.Demos.DedicatedServer
             }
         }
 
-
         private void OnDestroy()
         {
             List.Remove(Id);
@@ -44,7 +50,7 @@ namespace Riptide.Demos.DedicatedServer
 
         public static void Spawn(ushort id, string username)
         {
-            Player player = Instantiate(NetworkManager.Singleton.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
+            Player player = Instantiate(NetworkManager.Instance.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
             player.name = $"Player {id} ({(username == "" ? "Guest" : username)})";
             player.Id = id;
             player.Username = username;
@@ -58,12 +64,12 @@ namespace Riptide.Demos.DedicatedServer
         /// <param name="toClient">The client to send the message to.</param>
         public void SendSpawn(ushort toClient)
         {
-            NetworkManager.Singleton.Server.Send(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)), toClient);
+            NetworkManager.Instance.Server.Send(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)), toClient);
         }
         /// <summary>Sends a player's info to all clients.</summary>
         private void SendSpawn()
         {
-            NetworkManager.Singleton.Server.SendToAll(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)));
+            NetworkManager.Instance.Server.SendToAll(GetSpawnData(Message.Create(MessageSendMode.Reliable, ServerToClientId.SpawnPlayer)));
         }
 
         private Message GetSpawnData(Message message)
@@ -83,18 +89,15 @@ namespace Riptide.Demos.DedicatedServer
 
 
         // Handles incoming message from client containing latest head transforms and blend values
-        static Vector3 latestPosition = Vector3.zero;
-        static Vector3 latestRotation = Vector3.zero;
+        public static Vector3 latestPosition { get; private set; } = Vector3.zero;
+        public static Vector3 latestRotation { get; private set; } = Vector3.zero;
         [MessageHandler((ushort)ClientToServerId.FaceUpdate)]
         private static void PlayerInput(ushort fromClientId, Message message)
         {
             Player player = List[fromClientId];
             latestPosition = message.GetVector3();
             latestRotation = message.GetVector3();
-
-            Debug.Log($"Position: {latestPosition}  Rotation: {latestRotation}");
-
-            LatestBlendValues = message.GetFloats(TotalBlendShapes);
+            //LatestBlendValues = message.GetFloats(TotalBlendShapes);
         }
         #endregion
     }
