@@ -1,7 +1,9 @@
-﻿using UnityEngine;
+﻿using Riptide;
+using SamClient.Networking;
+using UnityEngine;
 using UnityEngine.UI;
 
-namespace Riptide.Demos.DedicatedClient
+namespace SamClient.Utils
 {
     public class UIManager : MonoBehaviour
     {

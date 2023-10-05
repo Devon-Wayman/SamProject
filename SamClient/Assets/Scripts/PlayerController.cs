@@ -1,6 +1,8 @@
-﻿using UnityEngine;
+﻿using Riptide;
+using SamClient.Networking;
+using UnityEngine;
 
-namespace Riptide.Demos.DedicatedClient
+namespace SamClient.PlayerAssets
 {
     /// <summary>
     /// Responsible for sending server our latest transform data and blendshape values
@@ -14,15 +16,8 @@ namespace Riptide.Demos.DedicatedClient
 
         private void Start()
         {
-            if (skinnedFaceMesh == null)
-            {
-                latestBlendValues = new float[0];
-            }
-            else
-            {
-                totalBlendshapes = skinnedFaceMesh.sharedMesh.blendShapeCount;
-                latestBlendValues = new float[totalBlendshapes];
-            }
+            totalBlendshapes = skinnedFaceMesh.sharedMesh.blendShapeCount;
+            latestBlendValues = new float[totalBlendshapes];
             
             Debug.Log($"{totalBlendshapes} found on mesh. Setting float array length");
         }
@@ -40,6 +35,7 @@ namespace Riptide.Demos.DedicatedClient
 
         private void FixedUpdate()
         {
+            if (!NetworkManager.Singleton.Client.IsConnected) return;
             SendFaceUpdate();
         }
 
