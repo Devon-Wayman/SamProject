@@ -12,13 +12,12 @@ namespace Riptide.Demos.DedicatedServer
 
 
         [SerializeField] SkinnedMeshRenderer serverHeadMesh;
-        static int TotalBlendShapes = 0;
+        public static int TotalBlendShapes { get; private set; } = 0;
         static float[] LatestBlendValues { get; set; }
 
         private void Start()
         {
-            if (serverHeadMesh == null)
-                return;
+            if (serverHeadMesh == null) return;
 
             TotalBlendShapes = serverHeadMesh.sharedMesh.blendShapeCount;
             LatestBlendValues = new float[TotalBlendShapes];
@@ -35,9 +34,7 @@ namespace Riptide.Demos.DedicatedServer
         {
             if (NetworkManager.Instance.Server.ClientCount == 0) return;
 
-
-            if (serverHeadMesh == null)
-                return;
+            if (serverHeadMesh == null)return;
 
             // Set the local head's blend values to the latest received from the connected client
             for (int i = 0; i < TotalBlendShapes; i++)
@@ -45,7 +42,6 @@ namespace Riptide.Demos.DedicatedServer
                 serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
             }
         }
-
 
         private void OnDestroy()
         {
@@ -93,18 +89,15 @@ namespace Riptide.Demos.DedicatedServer
 
 
         // Handles incoming message from client containing latest head transforms and blend values
-        static Vector3 latestPosition = Vector3.zero;
-        static Vector3 latestRotation = Vector3.zero;
+        public static Vector3 latestPosition { get; private set; } = Vector3.zero;
+        public static Vector3 latestRotation { get; private set; } = Vector3.zero;
         [MessageHandler((ushort)ClientToServerId.FaceUpdate)]
         private static void PlayerInput(ushort fromClientId, Message message)
         {
             Player player = List[fromClientId];
             latestPosition = message.GetVector3();
             latestRotation = message.GetVector3();
-
-            Debug.Log($"Position: {latestPosition}  Rotation: {latestRotation}");
-
-            LatestBlendValues = message.GetFloats(TotalBlendShapes);
+            //LatestBlendValues = message.GetFloats(TotalBlendShapes);
         }
         #endregion
     }
