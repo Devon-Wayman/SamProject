@@ -61,6 +61,9 @@ sysinfo.txt
 *.unitypackage
 *.app
 
+# Ignore the server build folder
+ServerBuild
+
 # Crashlytics generated file
 crashlytics-build.properties
 
