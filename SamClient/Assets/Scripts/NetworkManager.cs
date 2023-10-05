@@ -1,8 +1,11 @@
-﻿using Riptide.Utils;
+﻿using Riptide;
+using Riptide.Utils;
+using SamClient.PlayerAssets;
+using SamClient.Utils;
 using System;
 using UnityEngine;
 
-namespace Riptide.Demos.DedicatedClient
+namespace SamClient.Networking
 {
     public enum ServerToClientId : ushort
     {
@@ -35,12 +38,6 @@ namespace Riptide.Demos.DedicatedClient
 
         [SerializeField] private ushort port = 7777;
 
-        //[SerializeField] private GameObject localPlayerPrefab;
-        //[SerializeField] private GameObject playerPrefab;
-
-        //public GameObject LocalPlayerPrefab => localPlayerPrefab;
-        //public GameObject PlayerPrefab => playerPrefab;
-
         public Client Client { get; private set; }
 
         private void Awake()
@@ -51,7 +48,6 @@ namespace Riptide.Demos.DedicatedClient
         private void Start()
         {
             RiptideLogger.Initialize(Debug.Log, Debug.Log, Debug.LogWarning, Debug.LogError, false);
-
             Client = new Client();
             Client.Connected += DidConnect;
             Client.ConnectionFailed += FailedToConnect;
@@ -67,7 +63,6 @@ namespace Riptide.Demos.DedicatedClient
         private void OnApplicationQuit()
         {
             Client.Disconnect();
-
             Client.Connected -= DidConnect;
             Client.ConnectionFailed -= FailedToConnect;
             Client.ClientDisconnected -= PlayerLeft;
@@ -98,9 +93,6 @@ namespace Riptide.Demos.DedicatedClient
         private void DidDisconnect(object sender, DisconnectedEventArgs e)
         {
             UIManager.Singleton.BackToMain();
-
-            //foreach (Player player in Player.list.Values)
-            //    Destroy(player.gameObject);
         }
     }
 }
