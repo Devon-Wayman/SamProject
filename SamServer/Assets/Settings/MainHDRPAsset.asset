@@ -18,7 +18,7 @@ MonoBehaviour:
     supportSSRTransparent: 0
     supportSSAO: 1
     supportSSGI: 0
-    supportSubsurfaceScattering: 1
+    supportSubsurfaceScattering: 0
     sssSampleBudget:
       m_Values: 140000002800000050000000
       m_SchemaId:
@@ -31,10 +31,10 @@ MonoBehaviour:
     waterCPUSimulation: 0
     supportDistortion: 1
     supportTransparentBackface: 1
-    supportTransparentDepthPrepass: 1
-    supportTransparentDepthPostpass: 1
+    supportTransparentDepthPrepass: 0
+    supportTransparentDepthPostpass: 0
     colorBufferFormat: 74
-    supportCustomPass: 1
+    supportCustomPass: 0
     customBufferFormat: 8
     supportedLitShaderMode: 1
     planarReflectionResolution:
@@ -49,7 +49,7 @@ MonoBehaviour:
     supportDecalLayers: 0
     supportSurfaceGradient: 1
     decalNormalBufferHP: 0
-    msaaSampleCount: 8
+    msaaSampleCount: 4
     supportMotionVectors: 1
     supportDataDrivenLensFlare: 1
     supportRuntimeAOVAPI: 0
@@ -77,7 +77,7 @@ MonoBehaviour:
       reflectionProbeTexLastValidCubeMip: 3
       reflectionProbeTexLastValidPlanarMip: 0
       reflectionProbeDecreaseResToFit: 1
-      skyReflectionSize: 256
+      skyReflectionSize: 128
       skyLightingOverrideLayerMask:
         serializedVersion: 2
         m_Bits: 0
@@ -289,7 +289,7 @@ MonoBehaviour:
     m_ObsoleteSupportRuntimeDebugDisplay: 0
   allowShaderVariantStripping: 1
   enableSRPBatcher: 1
-  availableMaterialQualityLevels: -1
+  availableMaterialQualityLevels: 6
   m_DefaultMaterialQualityLevel: 4
   diffusionProfileSettings: {fileID: 0}
   virtualTexturingSettings:

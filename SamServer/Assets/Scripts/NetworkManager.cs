@@ -61,7 +61,6 @@ namespace Riptide.Demos.DedicatedServer
             Server.ClientDisconnected -= PlayerLeft;
         }
 
-        // TODO: See if we are able to remove this function
         private void NewPlayerConnected(object sender, ServerConnectedEventArgs e)
         {
             foreach (Player player in Player.List.Values)

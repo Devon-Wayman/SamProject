@@ -21,6 +21,7 @@ namespace Riptide.Demos.DedicatedServer
 
             TotalBlendShapes = serverHeadMesh.sharedMesh.blendShapeCount;
             LatestBlendValues = new float[TotalBlendShapes];
+            Debug.Log($"Total blendshapes array set to {LatestBlendValues.Length}. Total blendshapes = {TotalBlendShapes}");
         }
 
         private void Update()
@@ -29,15 +30,10 @@ namespace Riptide.Demos.DedicatedServer
 
             this.gameObject.transform.position = latestPosition;
             this.gameObject.transform.localEulerAngles = latestRotation;
-        }
-        private void FixedUpdate()
-        {
-            if (NetworkManager.Instance.Server.ClientCount == 0) return;
 
-            if (serverHeadMesh == null)return;
+            if (serverHeadMesh == null) return;
 
-            // Set the local head's blend values to the latest received from the connected client
-            for (int i = 0; i < TotalBlendShapes; i++)
+            for (int i = 0; i < LatestBlendValues.Length; i++)
             {
                 serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
             }
@@ -80,13 +76,11 @@ namespace Riptide.Demos.DedicatedServer
             return message;
         }
 
-
         [MessageHandler((ushort)ClientToServerId.PlayerName)]
         private static void PlayerName(ushort fromClientId, Message message)
         {
             Spawn(fromClientId, message.GetString());
         }
-
 
         // Handles incoming message from client containing latest head transforms and blend values
         public static Vector3 latestPosition { get; private set; } = Vector3.zero;
@@ -97,7 +91,7 @@ namespace Riptide.Demos.DedicatedServer
             Player player = List[fromClientId];
             latestPosition = message.GetVector3();
             latestRotation = message.GetVector3();
-            //LatestBlendValues = message.GetFloats(TotalBlendShapes);
+            LatestBlendValues = message.GetFloats();
         }
         #endregion
     }
