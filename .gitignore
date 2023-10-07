@@ -61,8 +61,8 @@ sysinfo.txt
 *.unitypackage
 *.app
 
-# Ignore the server build folder
-ServerBuild
+# Ignore build folder that will contain both server and mobile app builds
+SamBuilds
 
 # Crashlytics generated file
 crashlytics-build.properties
