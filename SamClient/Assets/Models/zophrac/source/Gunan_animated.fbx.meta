@@ -3,7 +3,27 @@ guid: 0a56ffcfd08e1456b988e1a744ab3a10
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects: {}
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Eyes
+    second: {fileID: 2100000, guid: 6cadbe65ed6a14f04a948ee8e17c9a6a, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Skin
+    second: {fileID: 2100000, guid: 93edc4054f7a04e2b9910d9db3449d14, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Teeth
+    second: {fileID: 2100000, guid: 2da480f34cf1147069d8cd69b94fff61, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: Teethridge
+    second: {fileID: 2100000, guid: fcf5a4d8ac4e84e69a5f8cac2f990335, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
