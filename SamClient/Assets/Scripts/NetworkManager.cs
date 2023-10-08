@@ -16,6 +16,7 @@ namespace SamClient.Networking
     {
         PlayerName = 1,
         FaceUpdate,
+        EyeUpdate
     }
 
     public class NetworkManager : MonoBehaviour
