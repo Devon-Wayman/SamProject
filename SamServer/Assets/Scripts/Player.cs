@@ -15,6 +15,11 @@ namespace Riptide.Demos.DedicatedServer
         public static int TotalBlendShapes { get; private set; } = 0;
         static float[] LatestBlendValues { get; set; }
 
+        [Header("Eye Related Updates")]
+        [SerializeField] bool updateEyes = true;
+        [SerializeField] GameObject leftEye = null;
+        [SerializeField] GameObject rightEye = null;
+
         private void Start()
         {
             if (serverHeadMesh == null) return;
@@ -24,12 +29,14 @@ namespace Riptide.Demos.DedicatedServer
             Debug.Log($"Total blendshapes array set to {LatestBlendValues.Length}. Total blendshapes = {TotalBlendShapes}");
         }
 
+        Quaternion latestLeftEyeQuaternion;
+        Quaternion latestRightEyeQuaternion;
         private void Update()
         {
             if (NetworkManager.Instance.Server.ClientCount == 0) return;
 
-            this.gameObject.transform.position = latestPosition;
-            this.gameObject.transform.localEulerAngles = latestRotation;
+            this.gameObject.transform.position = latestHeadPosition;
+            this.gameObject.transform.eulerAngles = latestHeadRotation;
 
             if (serverHeadMesh == null) return;
 
@@ -37,6 +44,15 @@ namespace Riptide.Demos.DedicatedServer
             {
                 serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
             }
+
+            if (!updateEyes || leftEye == null || rightEye == null) return;
+
+            // need to multiply the Z axis rotation by -1 as the data being read turns the eye the opposite way im looking
+            latestLeftEyeQuaternion = Quaternion.Euler(latestLeftEyeRotation.x, latestLeftEyeRotation.y * -1, latestLeftEyeRotation.z);
+            leftEye.transform.rotation = latestLeftEyeQuaternion;
+
+            latestRightEyeQuaternion = Quaternion.Euler(latestRightEyeRotation.x, latestRightEyeRotation.y * -1, latestRightEyeRotation.z);
+            rightEye.transform.rotation = latestRightEyeQuaternion;
         }
 
         private void OnDestroy()
@@ -83,15 +99,26 @@ namespace Riptide.Demos.DedicatedServer
         }
 
         // Handles incoming message from client containing latest head transforms and blend values
-        public static Vector3 latestPosition { get; private set; } = Vector3.zero;
-        public static Vector3 latestRotation { get; private set; } = Vector3.zero;
+        public static Vector3 latestHeadPosition { get; private set; } = Vector3.zero;
+        public static Vector3 latestHeadRotation { get; private set; } = Vector3.zero;
         [MessageHandler((ushort)ClientToServerId.FaceUpdate)]
-        private static void PlayerInput(ushort fromClientId, Message message)
+        private static void HeadUpdateReceived(ushort fromClientId, Message message)
         {
-            Player player = List[fromClientId];
-            latestPosition = message.GetVector3();
-            latestRotation = message.GetVector3();
+            //Player player = List[fromClientId];
+            latestHeadPosition = message.GetVector3();
+            latestHeadRotation = message.GetVector3();
             LatestBlendValues = message.GetFloats();
+        }
+
+        // Handles incoming message from client containing eye rotation data
+        public static Vector3 latestLeftEyeRotation { get; private set; } = Vector3.zero;
+        public static Vector3 latestRightEyeRotation { get; private set; } = Vector3.zero;
+        [MessageHandler((ushort)(ClientToServerId.EyeUpdate))]
+        private static void EyeUpdateReceived(ushort fromClientId, Message message)
+        {
+            //Player player = List[fromClientId];
+            latestLeftEyeRotation = message.GetVector3();
+            latestRightEyeRotation = message.GetVector3();
         }
         #endregion
     }

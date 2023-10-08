@@ -479,6 +479,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   serverHeadMesh: {fileID: 2703178852249597495}
+  updateEyes: 1
+  leftEye: {fileID: 5440511846258243674}
+  rightEye: {fileID: 9197970638440837197}
 --- !u!1 &5440511846258243674
 GameObject:
   m_ObjectHideFlags: 0

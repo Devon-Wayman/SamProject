@@ -15,6 +15,7 @@ namespace Riptide.Demos.DedicatedServer
     {
         PlayerName = 1,
         FaceUpdate,
+        EyeUpdate
     }
 
     public class NetworkManager : DevSingleton<NetworkManager>
