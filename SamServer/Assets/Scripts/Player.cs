@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
+using Riptide;
 using UnityEngine;
 
-namespace Riptide.Demos.DedicatedServer
+namespace SamServer.Networking
 {
     public class Player : MonoBehaviour
     {
@@ -62,7 +63,8 @@ namespace Riptide.Demos.DedicatedServer
 
         public static void Spawn(ushort id, string username)
         {
-            Player player = Instantiate(NetworkManager.Instance.PlayerPrefab, new Vector3(0f, 1f, 0f), Quaternion.identity).GetComponent<Player>();
+            // Spawn the head object at -20 on the Y axis. We will later tween the position to origin. This will create a smoother entrance
+            Player player = Instantiate(NetworkManager.Instance.PlayerPrefab, new Vector3(0f, 0f, 0f), Quaternion.identity).GetComponent<Player>();
             player.name = $"Player {id} ({(username == "" ? "Guest" : username)})";
             player.Id = id;
             player.Username = username;

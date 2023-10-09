@@ -1,10 +1,11 @@
-﻿using Riptide.Utils;
+﻿using Riptide;
+using Riptide.Utils;
 #if !UNITY_EDITOR
 using System;
 #endif
 using UnityEngine;
 
-namespace Riptide.Demos.DedicatedServer
+namespace SamServer.Networking
 {
     public enum ServerToClientId : ushort
     {
@@ -27,6 +28,8 @@ namespace Riptide.Demos.DedicatedServer
         public GameObject PlayerPrefab => playerPrefab;
 
         public Server Server { get; private set; }
+
+
 
         private void Start()
         {
@@ -64,6 +67,7 @@ namespace Riptide.Demos.DedicatedServer
 
         private void NewPlayerConnected(object sender, ServerConnectedEventArgs e)
         {
+            DebugDisplay.Instance.ChangeFadeCanvasAlpha(0f);
             foreach (Player player in Player.List.Values)
             {
                 if (player.Id != e.Client.Id)
@@ -75,7 +79,8 @@ namespace Riptide.Demos.DedicatedServer
 
         private void PlayerLeft(object sender, ServerDisconnectedEventArgs e)
         {
-            Destroy(Player.List[e.Client.Id].gameObject);
+            DebugDisplay.Instance.ChangeFadeCanvasAlpha(1f, e);
+            //Destroy(Player.List[e.Client.Id].gameObject);
         }
     }
 }

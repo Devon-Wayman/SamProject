@@ -57,6 +57,7 @@ QualitySettings:
     terrainMaxTrees: 50
     excludedTargetPlatforms:
     - Server
+    - iPhone
   - serializedVersion: 3
     name: High
     pixelLightCount: 2
@@ -73,14 +74,14 @@ QualitySettings:
     globalTextureMipmapLimit: 0
     textureMipmapLimitSettings: []
     anisotropicTextures: 1
-    antiAliasing: 8
+    antiAliasing: 4
     softParticles: 0
     softVegetation: 1
     realtimeReflectionProbes: 1
     billboardsFaceCameraPosition: 1
     useLegacyDetailDistribution: 1
     vSyncCount: 0
-    realtimeGICPUUsage: 50
+    realtimeGICPUUsage: 75
     lodBias: 1
     maximumLODLevel: 0
     enableLODCrossFade: 0
@@ -108,6 +109,7 @@ QualitySettings:
     terrainMaxTrees: 50
     excludedTargetPlatforms:
     - Server
+    - iPhone
   m_TextureMipmapLimitGroupNames: []
   m_PerPlatformDefaultQuality:
     Android: 0
