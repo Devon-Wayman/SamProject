@@ -94,7 +94,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83345f9e280b4436ebfaa7068bd3ea39, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blendShapeMappings: {fileID: 11400000, guid: 7ab325825889d4784b60292b4371a43c, type: 2}
+  blendShapeMappings: {fileID: 11400000, guid: 7544eba384ae94fdcb9b496599d8d90d, type: 2}
   skinnedMeshRenderer: {fileID: 8128146636792770284}
   face: {fileID: 19110420865476758}
 --- !u!114 &-5850747035922194469
