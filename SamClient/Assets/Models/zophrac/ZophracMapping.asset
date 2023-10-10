@@ -19,7 +19,7 @@ MonoBehaviour:
   - location: 1
     name: ExpressionBlendshapes.BrowsD_R
   - location: 2
-    name: ExpressionBlendshapes.BrowsD_L
+    name: ExpressionBlendshapes.BrowsU_C
   - location: 3
     name: blendshape2.browsU_L
   - location: 4
@@ -51,11 +51,11 @@ MonoBehaviour:
   - location: 17
     name: ExpressionBlendshapes.EyeUp_R
   - location: 18
-    name: blendshape2.eyeSquint_L
-  - location: 19
     name: ExpressionBlendshapes.EyeSquint_L
-  - location: 20
+  - location: 19
     name: ExpressionBlendshapes.EyeSquint_R
+  - location: 20
+    name: ExpressionBlendshapes.EyeOpen_L
   - location: 21
     name: ExpressionBlendshapes.EyeOpen_R
   - location: 22
@@ -63,7 +63,7 @@ MonoBehaviour:
   - location: 23
     name: ExpressionBlendshapes.JawLeft
   - location: 24
-    name: ExpressionBlendshapes.JaOpen
+    name: ExpressionBlendshapes.JawOpen
   - location: 25
     name: ExpressionBlendshapes.JawRight
   - location: 26
@@ -81,9 +81,9 @@ MonoBehaviour:
   - location: 32
     name: ExpressionBlendshapes.MouthLeft
   - location: 33
-    name: ExpressionBlendshapes.MouthRight
+    name: ExpressionBlendshapes.MouthFrown_L
   - location: 34
-    name: blendshape2.mouthLowerDown_R
+    name: ExpressionBlendshapes.MouthFrown_R
   - location: 35
     name: blendshape2.mouthPress_L
   - location: 36

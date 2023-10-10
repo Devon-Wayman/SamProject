@@ -171,12 +171,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spotlightParent: {fileID: 1346964301}
-  spotlights: []
-  availableColors:
-  - {r: 1, g: 0, b: 0, a: 1}
-  - {r: 0, g: 0, b: 1, a: 1}
-  - {r: 0, g: 1, b: 0, a: 1}
-  - {r: 1, g: 1, b: 1, a: 1}
+  sessionStartColor: 1
 --- !u!1 &193037742
 GameObject:
   m_ObjectHideFlags: 0
@@ -192,7 +187,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &193037743
 Transform:
   m_ObjectHideFlags: 0
@@ -999,7 +994,6 @@ GameObject:
   - component: {fileID: 1622029045}
   - component: {fileID: 1622029044}
   - component: {fileID: 1622029047}
-  - component: {fileID: 1622029048}
   m_Layer: 0
   m_Name: Camera
   m_TagString: Untagged
@@ -1125,21 +1119,6 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
---- !u!114 &1622029048
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1622029042}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5fa8450e1d4b249debe888eb59d1cb5e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  startPosition: {x: 0, y: 0, z: 0}
-  latestMouseX: 0
-  latestMouseY: 0
 --- !u!1 &2027927617
 GameObject:
   m_ObjectHideFlags: 0
