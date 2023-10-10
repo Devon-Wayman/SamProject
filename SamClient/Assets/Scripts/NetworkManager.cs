@@ -19,32 +19,11 @@ namespace SamClient.Networking
         EyeUpdate
     }
 
-    public class NetworkManager : MonoBehaviour
+    public class NetworkManager : DevSingleton<NetworkManager>
     {
-        private static NetworkManager _singleton;
-        public static NetworkManager Singleton
-        {
-            get => _singleton;
-            private set
-            {
-                if (_singleton == null)
-                    _singleton = value;
-                else if (_singleton != value)
-                {
-                    Debug.Log($"{nameof(NetworkManager)} instance already exists, destroying object!");
-                    Destroy(value);
-                }
-            }
-        }
-
         [SerializeField] private ushort port = 7777;
 
         public Client Client { get; private set; }
-
-        private void Awake()
-        {
-            Singleton = this;
-        }
 
         private void Start()
         {
@@ -78,12 +57,12 @@ namespace SamClient.Networking
 
         private void DidConnect(object sender, EventArgs e)
         {
-            UIManager.Singleton.SendName();
+            UIManager.Instance.SendName();
         }
 
         private void FailedToConnect(object sender, ConnectionFailedEventArgs e)
         {
-            UIManager.Singleton.BackToMain();
+            UIManager.Instance.BackToMain();
         }
 
         private void PlayerLeft(object sender, ClientDisconnectedEventArgs e)
@@ -93,7 +72,7 @@ namespace SamClient.Networking
 
         private void DidDisconnect(object sender, DisconnectedEventArgs e)
         {
-            UIManager.Singleton.BackToMain();
+            UIManager.Instance.BackToMain();
         }
     }
 }

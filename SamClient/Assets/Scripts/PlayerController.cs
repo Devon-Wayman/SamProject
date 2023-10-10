@@ -10,7 +10,7 @@ namespace SamClient.PlayerAssets
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] SkinnedMeshRenderer skinnedFaceMesh = null;
-        [SerializeField] float[] latestBlendValues;
+        float[] latestBlendValues;
 
         int totalBlendshapes = 0;
 
@@ -18,15 +18,16 @@ namespace SamClient.PlayerAssets
         {
             totalBlendshapes = skinnedFaceMesh.sharedMesh.blendShapeCount;
             latestBlendValues = new float[totalBlendshapes];
-            
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             Debug.Log($"{totalBlendshapes} found on mesh. Setting float array length");
+#endif
         }
 
         private void Update()
         {
             if (skinnedFaceMesh == null) return;
 
-            // Sample current blendshape values
             for (int i = 0; i < totalBlendshapes; i++)
             {
                 latestBlendValues[i] = skinnedFaceMesh.GetBlendShapeWeight(i);
@@ -35,7 +36,7 @@ namespace SamClient.PlayerAssets
 
         private void FixedUpdate()
         {
-            if (!NetworkManager.Singleton.Client.IsConnected) return;
+            if (!NetworkManager.Instance.Client.IsConnected) return;
             SendFaceUpdate();
         }
 
@@ -46,7 +47,7 @@ namespace SamClient.PlayerAssets
             message.AddVector3(gameObject.transform.position);
             message.AddVector3(gameObject.transform.eulerAngles); 
             message.AddFloats(latestBlendValues);
-            NetworkManager.Singleton.Client.Send(message);
+            NetworkManager.Instance.Client.Send(message);
         }
         #endregion
     }

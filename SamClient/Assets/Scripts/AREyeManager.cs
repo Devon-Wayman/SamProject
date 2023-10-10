@@ -82,7 +82,7 @@ public class AREyeManager : MonoBehaviour
     private void FixedUpdate()
     {
         // Dont bother trying to send a packet to the server if client is not connected
-        if (!NetworkManager.Singleton.Client.IsConnected) return;
+        if (!NetworkManager.Instance.Client.IsConnected) return;
 
         if (leftEye == null && rightEye == null) return;
 
@@ -98,7 +98,7 @@ public class AREyeManager : MonoBehaviour
         Message message = Message.Create(MessageSendMode.Unreliable, ClientToServerId.EyeUpdate);
         message.AddVector3(leftEye.transform.eulerAngles);
         message.AddVector3(rightEye.transform.eulerAngles);
-        NetworkManager.Singleton.Client.Send(message);
+        NetworkManager.Instance.Client.Send(message);
     }
 
     private void OnArFaceUpdate(ARFaceUpdatedEventArgs args)

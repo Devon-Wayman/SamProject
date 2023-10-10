@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Riptide;
 using UnityEngine;
+using UnityEngine.PlayerLoop;
+using UnityEngine.XR;
 
 namespace SamServer.Networking
 {
@@ -13,6 +15,7 @@ namespace SamServer.Networking
 
 
         [SerializeField] SkinnedMeshRenderer serverHeadMesh;
+        [SerializeField] float positionMultiplier = 1f;
         public static int TotalBlendShapes { get; private set; } = 0;
         static float[] LatestBlendValues { get; set; }
 
@@ -36,8 +39,9 @@ namespace SamServer.Networking
         {
             if (NetworkManager.Instance.Server.ClientCount == 0) return;
 
-            this.gameObject.transform.position = latestHeadPosition;
+            this.gameObject.transform.localPosition = latestHeadPosition;
             this.gameObject.transform.eulerAngles = latestHeadRotation;
+
 
             if (serverHeadMesh == null) return;
 
@@ -46,15 +50,43 @@ namespace SamServer.Networking
                 serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
             }
 
+
+
+
+            // UPDATE EYE GAZE DIRECTION
             if (!updateEyes || leftEye == null || rightEye == null) return;
 
             // need to multiply the Z axis rotation by -1 as the data being read turns the eye the opposite way im looking
             latestLeftEyeQuaternion = Quaternion.Euler(latestLeftEyeRotation.x, latestLeftEyeRotation.y * -1, latestLeftEyeRotation.z);
             leftEye.transform.rotation = latestLeftEyeQuaternion;
-
             latestRightEyeQuaternion = Quaternion.Euler(latestRightEyeRotation.x, latestRightEyeRotation.y * -1, latestRightEyeRotation.z);
             rightEye.transform.rotation = latestRightEyeQuaternion;
         }
+
+        //private void FixedUpdate()
+        //{
+        //    if (NetworkManager.Instance.Server.ClientCount == 0) return;
+
+        //    this.gameObject.transform.localPosition = latestHeadPosition;
+        //    this.gameObject.transform.eulerAngles = latestHeadRotation;
+
+
+        //    if (serverHeadMesh == null) return;
+
+        //    for (int i = 0; i < LatestBlendValues.Length; i++)
+        //    {
+        //        serverHeadMesh.SetBlendShapeWeight(i, LatestBlendValues[i]);
+        //    }
+
+        //    // UPDATE EYE GAZE DIRECTION
+        //    if (!updateEyes || leftEye == null || rightEye == null) return;
+
+        //    // need to multiply the Z axis rotation by -1 as the data being read turns the eye the opposite way im looking
+        //    latestLeftEyeQuaternion = Quaternion.Euler(latestLeftEyeRotation.x, latestLeftEyeRotation.y * -1, latestLeftEyeRotation.z);
+        //    leftEye.transform.rotation = latestLeftEyeQuaternion;
+        //    latestRightEyeQuaternion = Quaternion.Euler(latestRightEyeRotation.x, latestRightEyeRotation.y * -1, latestRightEyeRotation.z);
+        //    rightEye.transform.rotation = latestRightEyeQuaternion;
+        //}
 
         private void OnDestroy()
         {

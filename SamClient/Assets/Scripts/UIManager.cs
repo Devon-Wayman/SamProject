@@ -6,23 +6,8 @@ using UnityEngine.XR.ARFoundation;
 
 namespace SamClient.Utils
 {
-    public class UIManager : MonoBehaviour
+    public class UIManager : DevSingleton<UIManager>
     {
-        private static UIManager _singleton;
-        public static UIManager Singleton
-        {
-            get => _singleton;
-            private set
-            {
-                if (_singleton == null)
-                    _singleton = value;
-                else if (_singleton != value)
-                {
-                    Debug.Log($"{nameof(UIManager)} instance already exists, destroying object!");
-                    Destroy(value);
-                }
-            }
-        }
 
         [Header("Connection Setup")]
         [SerializeField] private InputField serverAddressInput;
@@ -32,10 +17,6 @@ namespace SamClient.Utils
         [SerializeField] GameObject activeSessionScreen = null;
         [SerializeField] ARSession arSession = null;
 
-        private void Awake()
-        {
-            Singleton = this;
-        }
         private void OnEnable()
         {
             connectScreen.SetActive(true);
@@ -52,7 +33,7 @@ namespace SamClient.Utils
         {
             serverAddressInput.interactable = false;
             connectScreen.SetActive(false);
-            NetworkManager.Singleton.Connect(serverAddressInput.text.Trim());
+            NetworkManager.Instance.Connect(serverAddressInput.text.Trim());
         }
 
         public void BackToMain()
@@ -71,7 +52,7 @@ namespace SamClient.Utils
 
             Message message = Message.Create(MessageSendMode.Reliable, ClientToServerId.PlayerName);
             message.AddString("UserFace");
-            NetworkManager.Singleton.Client.Send(message);
+            NetworkManager.Instance.Client.Send(message);
         }
         #endregion
     }

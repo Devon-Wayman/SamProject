@@ -20,7 +20,7 @@ MonoBehaviour:
   - {fileID: 4887810019894602768}
   m_RendererFeatureMap: 10ac69fd50fdd443
   m_UseNativeRenderPass: 0
-  postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
+  postProcessData: {fileID: 0}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
   shaders:
     blitPS: {fileID: 4800000, guid: c17132b1f77d20942aa75f8429c0f8bc, type: 3}
@@ -56,7 +56,7 @@ MonoBehaviour:
     passOperation: 0
     failOperation: 0
     zFailOperation: 0
-  m_ShadowTransparentReceive: 1
+  m_ShadowTransparentReceive: 0
   m_RenderingMode: 0
   m_DepthPrimingMode: 0
   m_CopyDepthMode: 0
@@ -74,4 +74,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ae4d376c05df421b98c5b39b25b0d29, type: 3}
   m_Name: ARBackgroundRendererFeature
   m_EditorClassIdentifier: 
-  m_Active: 1
+  m_Active: 0
