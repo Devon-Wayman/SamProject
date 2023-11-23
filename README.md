@@ -18,11 +18,9 @@
 
 ## About The Project
 
-* Viewer perspective example:
 ![Product Name Screen Shot][viewer-image]
 
-* Performer setup example:
-![operation-image]
+![Operation Example][operation-image]
 
 
 ### Built With
