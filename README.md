@@ -6,13 +6,8 @@
 [![LinkedIn][linkedin-shield]][linkedin-url]
 
 
-<!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/Devon-Wayman/SamProject">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">SAM Project</h3>
 
   <p align="center">
@@ -21,13 +16,13 @@
 </div>
 
 
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
+* Viewer perspective example:
 ![Product Name Screen Shot][viewer-image]
-![operation-image]
 
-This application is a combination of computer networking and 
+* Performer setup example:
+![operation-image]
 
 
 ### Built With
@@ -37,14 +32,12 @@ The following programs and libraries were used within this application's develop
 * [Unity Engine][unity-url]
 * [Visual Studio][vs-url]
 
-<!-- GETTING STARTED -->
 ## Getting Started
 
 This is an example of how you may give instructions on setting up your project locally.
 To get a local copy up and running follow these simple example steps.
 
 ### Prerequisites
-
 Hardware Needed: 
 
 * iDevice (iPhone or iPad with face tracking capability)
@@ -72,10 +65,7 @@ send the required data to the server.
 should see the head model appear within the server application and follow the user's motions and expressions. 
 
 
-
-<!-- USAGE EXAMPLES -->
 ## Usage and Tips
-
 * The application can be simply projected onto a wall though using polyester chiffon  (recommend solid-platinum) is highly recommended as it is a great material to use for projecting images onto. With the proper lighting the fabric itself 
 will be practically invisible, making the head appear to be floating in the air.
 
@@ -88,22 +78,17 @@ to directly connect the mobile device and the laptop hosting the server directly
 and greatly improve performance
 
 
-
-<!-- CONTACT -->
 ## Contact
 Devon Wayman -  devonwayman97@gmail.com
 
 Project Link: [Here](https://github.com/Devon-Wayman/SamProject)
 
 
-<!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
-
 Special thanks to the following developers for their resources, inspiration and guidance
 
 * [Dilmer Valecillos](https://www.youtube.com/@dilmerv) - For his treasure trove of AR development based educational resources.
 * [Tom Weiland](https://www.youtube.com/@tomweiland) - For his open source networking framework, Riptide. 
-
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
@@ -120,7 +105,6 @@ Special thanks to the following developers for their resources, inspiration and 
 [linkedin-url]: https://www.linkedin.com/in/devon-wayman/
 [viewer-image]: images/viewer.gif
 [operation-image]: images/operation.gif
-[riptide-logo]: https://avatars.githubusercontent.com/u/113218554?s=48&v=4
 [riptide-url]: https://github.com/RiptideNetworking/Riptide
 [unity-url]: https://unity.com/
 [vs-url]: https://visualstudio.microsoft.com
