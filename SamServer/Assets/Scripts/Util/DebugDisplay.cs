@@ -55,7 +55,8 @@ public class DebugDisplay : DevSingleton<DebugDisplay>
         {
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-        } else
+        }
+        else
         {
             Cursor.visible = false;
             Cursor.lockState = CursorLockMode.Locked;
@@ -64,11 +65,13 @@ public class DebugDisplay : DevSingleton<DebugDisplay>
 
     private void UpdateDebugText()
     {
-        if (NetworkManager.Instance.Server.ClientCount == 0){
-            debugText.text = $"Server running: {NetworkManager.Instance.Server.IsRunning}\nServer port: {NetworkManager.Instance.Server.Port}\nServer TOT: {NetworkManager.Instance.Server.TimeoutTime}\nServer Addresses:\n{String.Join("\n  ", serverIps)}\n\nClient connected: False";
-        } else
+        if (NetworkManager.Instance.Server.ClientCount == 0)
         {
-            debugText.text = $"Server running: {NetworkManager.Instance.Server.IsRunning}\nServer port: {NetworkManager.Instance.Server.Port}\nServer TOT: {NetworkManager.Instance.Server.TimeoutTime}\n\nClient connected: True\nClient Not Connected: {NetworkManager.Instance.Server.Clients[0].IsNotConnected}\nClient head position: {Player.latestHeadPosition}\nClient head rotation: {Player.latestHeadRotation}\nClient RTT: {NetworkManager.Instance.Server.Clients[0].RTT}ms";
+            debugText.text = $"Server running: {NetworkManager.Instance.Server.IsRunning}\nServer port: {NetworkManager.Instance.Server.Port}\nServer Addresses:\n{String.Join("\n  ", serverIps)}\n\nClient connected: False";
+        }
+        else
+        {
+            debugText.text = $"Server running: {NetworkManager.Instance.Server.IsRunning}\nServer port: {NetworkManager.Instance.Server.Port}\\nClient connected: True\nClient Not Connected: {NetworkManager.Instance.Server.Clients[0].IsNotConnected}\nClient head position: {Player.latestHeadPosition}\nClient head rotation: {Player.latestHeadRotation}\nClient RTT: {NetworkManager.Instance.Server.Clients[0].RTT}ms";
         }
     }
 
@@ -80,7 +83,8 @@ public class DebugDisplay : DevSingleton<DebugDisplay>
 
     public void ChangeFadeCanvasAlpha(float requestedAlpha, ServerDisconnectedEventArgs e)
     {
-        LeanTween.alphaCanvas(fadeCanvas, requestedAlpha, 1f).setOnComplete(delegate () {
+        LeanTween.alphaCanvas(fadeCanvas, requestedAlpha, 1f).setOnComplete(delegate ()
+        {
             Destroy(Player.List[e.Client.Id].gameObject);
         });
     }
